@@ -17,7 +17,7 @@ namespace CRUD_Web.Controllers
         }
 
         public JsonResult GetShippers()
-        {//4546548965
+        {
             return Json(db.Shippers,JsonRequestBehavior.AllowGet);
         }
     }

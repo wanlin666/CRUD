@@ -3,19 +3,41 @@
     ViewBag.Title = "Shippers";
 }
 
-<h2>Shippers</h2>
-<button class="btn btn-primary">新增</button>
-<table class="table">
+<h2 style="text-align:center">Shippers</h2>
+<button class="btn btn-success" data-toggle="modal" data-target="#staticBackdrop">新增</button>
+<table class="table table-bordered">
     <thead>
         <tr>
             <td>ShipperID</td>
             <td>CompanyName</td>
             <td>Phone</td>
+            <td>編輯</td>
+            <td>刪除</td>
         </tr>
     </thead>
     <tbody id="ShipperTB">
     </tbody>
 </table>
+<!--Modal-->
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">新增</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                CompanyName: <input type="text" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                <button type="button" class="btn btn-primary">儲存</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section scripts{
     <script>
@@ -29,7 +51,12 @@
             $.getJSON('@Url.Action("GetShippers","Shippers")', datas => {
                 var docFrag = $(document.createDocumentFragment());
                 datas.forEach(item => {
-                    docFrag.append(`<tr><td>${item.ShipperID}</td><td>${item.CompanyName}</td><td>${item.Phone}</td></tr>`);
+                    docFrag.append(`<tr><td>${item.ShipperID}</td>
+                                        <td>${item.CompanyName}</td>
+                                        <td>${item.Phone}</td>
+                                        <td><button class="btn btn-primary">編輯</button></td>
+                                        <td><button class="btn btn-danger">刪除</button></td>
+                                    </tr>`);
                 });
                 ShipperTB.append(docFrag);
                 console.log(datas);

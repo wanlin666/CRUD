@@ -95,3 +95,4 @@ E:\CRUD\CRUD_Web\CRUD_Web\bin\EntityFramework.SqlServer.dll
 E:\CRUD\CRUD_Web\CRUD_Web\bin\EntityFramework.xml
 E:\CRUD\CRUD_Web\CRUD_Web\bin\EntityFramework.SqlServer.xml
 E:\CRUD\CRUD_Web\CRUD_Web\bin\zh-Hant\EntityFramework.resources.dll
+E:\CRUD\CRUD_Web\CRUD_Web\bin\zh-Hant\EntityFramework.SqlServer.resources.dll

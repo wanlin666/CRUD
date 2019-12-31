@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "Shippers";
+}
+
+<h2>Shippers</h2>
+<button class="btn btn-primary">新增</button>
+<table class="table">
+    <thead>
+        <tr>
+            <td>ShipperID</td>
+            <td>CompanyName</td>
+            <td>Phone</td>
+        </tr>
+    </thead>
+    <tbody id="ShipperTB">
+    </tbody>
+</table>
+
+@section scripts{
+    <script>
+        var ShipperTB = $("#ShipperTB");
+
+        $(document).ready(() => {
+            LoadShippers();
+        });
+
+        function LoadShippers() {
+            $.getJSON('@Url.Action("GetShippers","Shippers")', datas => {
+                var docFrag = $(document.createDocumentFragment());
+                datas.forEach(item => {
+                    docFrag.append(`<tr><td>${item.ShipperID}</td><td>${item.CompanyName}</td><td>${item.Phone}</td></tr>`);
+                });
+                ShipperTB.append(docFrag);
+                console.log(datas);
+            });
+        }
+
+        
+    </script>  
+}

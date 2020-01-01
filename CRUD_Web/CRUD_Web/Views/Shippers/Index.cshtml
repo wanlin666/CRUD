@@ -58,6 +58,7 @@
             LoadShippers();            
         });
 
+        //讀取
         function LoadShippers() {
             $.getJSON('@Url.Action("GetShippers","Shippers")', datas => {
                 var docFrag = $(document.createDocumentFragment());
@@ -74,6 +75,7 @@
             });
         }
 
+        //修改
         function btnUpdate_click(ShipperID, CompanyName, Phone) {
             $("#modalTitle").text("修改");
             $("#ShipperID").val(ShipperID);
@@ -81,6 +83,7 @@
             $("#Phone").val(Phone);           
         }
 
+        //新增
         $("#btn_create").on("click", () => {
             $("#div_shipperID").hide();
             $("#modalTitle").text("新增");
@@ -88,6 +91,7 @@
             $("#Phone").val("");
         });
 
+        //儲存
         $("#btn_save").on("click", () => {
             var status = $("#modalTitle").text();
             var jsonData = JSON.stringify({
@@ -108,8 +112,17 @@
                     LoadShippers();
                 }).fail(error => alert(`發生錯誤: ${error.statusText}`));    
             }
-            else {
-                alert(status);
+            else {//修改
+                $.ajax({
+                    url: '@Url.Action("UpdateShipper","Shippers")',
+                    method: "POST",
+                    contentType: "application/json",
+                    data: jsonData
+                }).done(data => {
+                    $('#myModal').modal('hide');
+                    LoadShippers();
+                    toastr.success(data);
+                }).fail(error => alert(`發生錯誤: ${error.statusText}`));
             }
         });
     </script>  

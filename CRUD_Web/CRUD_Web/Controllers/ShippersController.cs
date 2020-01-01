@@ -16,17 +16,38 @@ namespace CRUD_Web.Controllers
             return View();
         }
 
+        //讀取
         public JsonResult GetShippers()
         {
             return Json(db.Shippers,JsonRequestBehavior.AllowGet);
         }
         
+        //新增
         [HttpPost]
         public JsonResult CreateShipper(Shippers shipper)
         {
             db.Shippers.Add(shipper);
             db.SaveChanges();
             return Json(shipper,JsonRequestBehavior.AllowGet);
+        }
+
+        //修改
+        [HttpPost]
+        public JsonResult UpdateShipper(Shippers shipper)
+        {
+            var q = db.Shippers.Where(s => s.ShipperID == shipper.ShipperID).FirstOrDefault();
+            try
+            {
+                q.CompanyName = shipper.CompanyName;
+                q.Phone = shipper.Phone;
+                db.SaveChanges();
+                return Json("修改成功", JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json("修改失敗", JsonRequestBehavior.AllowGet);
+            }
+            
         }
     }
 }

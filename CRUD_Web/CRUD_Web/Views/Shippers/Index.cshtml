@@ -4,7 +4,7 @@
 }
 
 <h2 style="text-align:center">Shippers</h2>
-<button class="btn btn-success" data-toggle="modal" data-target="#staticBackdrop">新增</button>
+<button class="btn btn-success" data-toggle="modal" data-target="#myModal" id="btn_create">新增</button>
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -19,21 +19,32 @@
     </tbody>
 </table>
 <!--Modal-->
-<div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="myModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">新增</h5>
+                <h5 class="modal-title" id="modalTitle">新增</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                CompanyName: <input type="text" />
+                <div id="div_shipperID" class="form-group">
+                    <label for="ShipperID">ShipperID:</label>
+                    <input type="text" id="ShipperID" disabled />
+                </div>
+                <div class="form-group">
+                    <label for="CompanyName">CompanyName:</label>
+                    <input type="text" id="CompanyName" />
+                </div>
+                <div class="form-group">
+                    <label for="Phone">Phone:</label>
+                    <input type="text" id="Phone" />
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
-                <button type="button" class="btn btn-primary">儲存</button>
+                <button type="button" class="btn btn-primary" id="btn_save">儲存</button>
             </div>
         </div>
     </div>
@@ -44,25 +55,62 @@
         var ShipperTB = $("#ShipperTB");
 
         $(document).ready(() => {
-            LoadShippers();
+            LoadShippers();            
         });
 
         function LoadShippers() {
             $.getJSON('@Url.Action("GetShippers","Shippers")', datas => {
                 var docFrag = $(document.createDocumentFragment());
+                ShipperTB.empty();
                 datas.forEach(item => {
                     docFrag.append(`<tr><td>${item.ShipperID}</td>
                                         <td>${item.CompanyName}</td>
                                         <td>${item.Phone}</td>
-                                        <td><button class="btn btn-primary">編輯</button></td>
+                                        <td><button onclick="btnUpdate_click(${item.ShipperID},'${item.CompanyName}','${item.Phone}')" class="btn btn-primary" data-toggle="modal" data-target="#myModal">編輯</button></td>
                                         <td><button class="btn btn-danger">刪除</button></td>
                                     </tr>`);
                 });
-                ShipperTB.append(docFrag);
-                console.log(datas);
+                ShipperTB.append(docFrag);                
             });
         }
 
-        
+        function btnUpdate_click(ShipperID, CompanyName, Phone) {
+            $("#modalTitle").text("修改");
+            $("#ShipperID").val(ShipperID);
+            $("#CompanyName").val(CompanyName);
+            $("#Phone").val(Phone);           
+        }
+
+        $("#btn_create").on("click", () => {
+            $("#div_shipperID").hide();
+            $("#modalTitle").text("新增");
+            $("#CompanyName").val("");
+            $("#Phone").val("");
+        });
+
+        $("#btn_save").on("click", () => {
+            var status = $("#modalTitle").text();
+            var jsonData = JSON.stringify({
+                ShipperID: $("#ShipperID").val(),
+                CompanyName: $("#CompanyName").val(),
+                Phone: $("#Phone").val()
+            });
+
+            if (status == "新增") {
+                $.ajax({
+                    url: '@Url.Action("CreateShipper","Shippers")',
+                    method: "POST",
+                    contentType: "application/json",
+                    data: jsonData
+                }).done(data => {
+                    $('#myModal').modal('hide');
+                    toastr.success(`新增成功! 編號:${data.ShipperID}`);
+                    LoadShippers();
+                }).fail(error => alert(`發生錯誤: ${error.statusText}`));    
+            }
+            else {
+                alert(status);
+            }
+        });
     </script>  
 }

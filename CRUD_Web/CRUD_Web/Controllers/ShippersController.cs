@@ -20,5 +20,13 @@ namespace CRUD_Web.Controllers
         {
             return Json(db.Shippers,JsonRequestBehavior.AllowGet);
         }
+        
+        [HttpPost]
+        public JsonResult CreateShipper(Shippers shipper)
+        {
+            db.Shippers.Add(shipper);
+            db.SaveChanges();
+            return Json(shipper,JsonRequestBehavior.AllowGet);
+        }
     }
 }

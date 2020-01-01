@@ -49,5 +49,19 @@ namespace CRUD_Web.Controllers
             }
             
         }
+
+        //刪除
+        public JsonResult DeleteShipper(int id)
+        {
+            Shippers shipper = db.Shippers.Find(id);
+            if(shipper == null)
+            {
+                return Json("NotFound",JsonRequestBehavior.AllowGet);
+            }
+
+            db.Shippers.Remove(shipper);
+            db.SaveChanges();
+            return Json(shipper.ShipperID, JsonRequestBehavior.AllowGet);               
+        }
     }
 }

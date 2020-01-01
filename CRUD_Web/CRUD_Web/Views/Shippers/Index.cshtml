@@ -1,11 +1,11 @@
 ﻿
 @{
-    ViewBag.Title = "Shippers";
+    ViewBag.Title = "CRUD";
 }
 
-<h2 style="text-align:center">Shippers</h2>
+<h2 style="text-align:center">Shippers - CRUD</h2>
 <button class="btn btn-success" data-toggle="modal" data-target="#myModal" id="btn_create">新增</button>
-<table class="table table-bordered">
+<table class="table table-bordered" style="text-align:center">
     <thead>
         <tr>
             <td>ShipperID</td>
@@ -68,7 +68,7 @@
                                         <td>${item.CompanyName}</td>
                                         <td>${item.Phone}</td>
                                         <td><button onclick="btnUpdate_click(${item.ShipperID},'${item.CompanyName}','${item.Phone}')" class="btn btn-primary" data-toggle="modal" data-target="#myModal">編輯</button></td>
-                                        <td><button class="btn btn-danger">刪除</button></td>
+                                        <td><button onclick="btnDelete_click(${item.ShipperID})" class="btn btn-danger">刪除</button></td>
                                     </tr>`);
                 });
                 ShipperTB.append(docFrag);                
@@ -93,6 +93,12 @@
 
         //儲存
         $("#btn_save").on("click", () => {
+
+            if ($("#CompanyName").val == "" || $("#Phone").val() == "") {
+                toastr.warning("輸入資料不完整");
+                return;
+            }
+
             var status = $("#modalTitle").text();
             var jsonData = JSON.stringify({
                 ShipperID: $("#ShipperID").val(),
@@ -122,8 +128,23 @@
                     $('#myModal').modal('hide');
                     LoadShippers();
                     toastr.success(data);
-                }).fail(error => alert(`發生錯誤: ${error.statusText}`));
+                }).fail(error => toastr.error(`發生錯誤: ${error.statusText}`));
             }
         });
+
+        //刪除
+        function btnDelete_click(ShipperID) {
+            if (confirm("確定刪除嗎?")) {
+                $.getJSON('@Url.Action("DeleteShipper","Shippers")/' + ShipperID, data => {
+                    if (data != "NotFound") {
+                        LoadShippers();
+                        toastr.success(`刪除編號: ${data} 成功!`);
+                    }
+                    else {
+                        toastr.error(data);
+                    }
+                });
+            }            
+        }
     </script>  
 }
